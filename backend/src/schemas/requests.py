@@ -28,3 +28,7 @@ class ScheduleRequest(RunRequest):
     recipient: str = Field(min_length=1, max_length=100)
     first_at: datetime
     repeat_daily: bool = False
+
+class SettlementRequest(Request):
+    dataset_id: int = Field(gt=0)
+    period: str = Field(min_length=7, max_length=7)

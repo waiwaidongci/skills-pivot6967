@@ -39,14 +39,14 @@ def _validated_intakes(rows):
         groups[learner, day[:7]].append((day, channel, program, enrolled))
 
     intakes = []
-    for (_, period), entries in groups.items():
+    for (learner, period), entries in groups.items():
         first_day = min(entry[0] for entry in entries)
         first_assignments = {(channel, program) for day, channel, program, _ in entries if day == first_day}
         if len(first_assignments) != 1:
             raise ValueError("有学员在同月最早受理日存在多个渠道或项目，请核对原始明细后重新导入。")
         channel, program = first_assignments.pop()
         converted = any(project == program and enrolled for _, _, project, enrolled in entries)
-        intakes.append((period, channel, program, converted))
+        intakes.append((learner, period, channel, program, converted))
     return records, intakes
 
 
@@ -54,6 +54,11 @@ def validate_rows(rows):
     """验证源明细及月内归属，返回可留存的原始记录副本。"""
     records, _ = _validated_intakes(rows)
     return records
+
+
+def monthly_intakes(rows):
+    """验证源明细，返回原始记录副本和按月去重归属（含学员编号），供月报与结算共用。"""
+    return _validated_intakes(rows)
 
 
 def _parameters(params):
@@ -90,7 +95,7 @@ def analyze(rows, normalized_params):
     period, threshold = _parameters(normalized_params)
     _, intakes = _validated_intakes(rows)
     counts = {key: (0, 0) for key in product(CHANNELS, PROGRAMS)}
-    for month, channel, program, converted in intakes:
+    for _learner, month, channel, program, converted in intakes:
         if month == period:
             confirmed, total = counts[channel, program]
             counts[channel, program] = (confirmed + int(converted), total + 1)

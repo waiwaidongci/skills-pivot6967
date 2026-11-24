@@ -15,3 +15,10 @@ class Review(StrEnum):
     PENDING = 'pending'
     ACCEPTED = 'accepted'
     RETURNED = 'returned'
+
+class Settlement(StrEnum):
+    QUEUED = 'queued'
+    RUNNING = 'running'
+    POSTED = 'posted'
+    SUPERSEDED = 'superseded'
+    FAILED = 'failed'

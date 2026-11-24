@@ -27,3 +27,9 @@ def schedule(item):
 def delivery(item):
     return {'id': item.id, 'run_id': item.run_id, 'recipient': item.recipient,
             'state': item.state, 'detail': item.detail, 'created_at': iso(item.created_at)}
+
+
+def settlement(item):
+    return {'id': item.id, 'dataset_id': item.dataset_id, 'period': item.period, 'status': item.status,
+            'author': item.author, 'entry_id': item.entry_id, 'error': item.error,
+            'created_at': iso(item.created_at), 'finished_at': iso(item.finished_at)}

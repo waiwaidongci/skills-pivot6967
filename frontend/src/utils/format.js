@@ -10,3 +10,4 @@ export function value(input) {
   return Array.isArray(input) ? input.join('、') : String(input);
 }
 export const date = input => input ? dateFormatter.format(new Date(input)) : '—';
+export const money = fen => `${fen < 0 ? '-' : ''}¥${(Math.abs(fen) / 100).toFixed(2)}`;
